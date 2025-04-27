@@ -17,8 +17,7 @@ namespace GamePlay
         private List<CardController> _cards;
         private List<GameObject> _cardsolts;
         private CardController _dragCard;
-        private float _matchCardArea;
-
+        private float _matchCardArea = 50;
 
         int cardLength = 7;
 
@@ -28,13 +27,14 @@ namespace GamePlay
             _soltsPrefab = Resources.Load<GameObject>("Prefabs/CardSolts");
             _content = transform.Find("Content").GetComponent<RectTransform>();
             _visualGroup = transform.Find("VisualGroup").GetComponent<RectTransform>();
-            _matchCardArea = 50;
-
+            
             InitCard();
         }
 
         private void InitCard()
         {
+            InitDragArea();
+            
             if (_content.childCount > 0)
             {
                 for (int i = _content.childCount - 1; i > -1; i--)
@@ -70,6 +70,11 @@ namespace GamePlay
             LayoutRebuilder.ForceRebuildLayoutImmediate(_content);
         }
 
+        private void InitDragArea()
+        {
+            float contentSpacing = Mathf.Abs(_content.GetComponent<HorizontalLayoutGroup>().spacing);
+            _matchCardArea = _matchCardArea - (contentSpacing / 2);
+        }        
         public void SetDragCard(CardController controller)
         {
             _dragCard = controller;
@@ -130,7 +135,7 @@ namespace GamePlay
                 Transform temp = _content.GetChild(dragIndex).GetChild(0);
                 for (int i = targetIndex; i <= dragIndex; i++)
                 {
-                    Debug.Log($"{temp.gameObject.name}");
+                    //Debug.Log($"{temp.gameObject.name}");
                     Transform solts = _content.GetChild(i);
                     if (i == targetIndex)
                     {
