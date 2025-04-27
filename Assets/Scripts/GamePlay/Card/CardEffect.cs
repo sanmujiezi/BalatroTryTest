@@ -11,18 +11,12 @@ namespace GamePlay
 {
     public class CardEffect : MonoBehaviour, ICardController
     {
-        [Header("卡片跟随速度")] public float cardFllowSpeed;
 
         [Header("动画曲线")] public AnimationCurve pointerIn;
-        [FormerlySerializedAs("pointerout")] public AnimationCurve pointerOut;
-        public float shakeAngle = 4;
-        public int vibrato = 20;
-        public float randomness = 50;
-        public float duration = 0.2f;
+        public AnimationCurve pointerOut;
         public List<Tweener> _pointerInTweener;
         public List<Tweener> _pointerOutTweener;
         public List<Tweener> _selectedCardTweener;
-
 
         private Canvas _dragCanvas;
         private RectTransform _dragCard;
@@ -33,13 +27,21 @@ namespace GamePlay
         private CardController _controller;
 
         [HideInInspector] public int _originSortingOrder;
+        private Vector3 _originPos;
 
-        [Header("自旋转设置")] public float tiltSpeed = 1;
-        public float roatetionZ;
+        private float cardFllowSpeed = 25;
+        private float shakeAngle = 4;
+        private int vibrato = 30;
+        private float randomness = 25;
+        private float duration = 0.1f;
+        private  float tiltSpeed = 15;
+        public float offsetRoatetionZ;
+        public float offsetPostionY;
         private Vector3 _deltaPos;
         private bool isHover;
         private bool isDrag;
         private int savedIndex;
+
 
 
         private void Awake()
@@ -51,7 +53,7 @@ namespace GamePlay
             _cardFaceImage = _cardFace.Find("ImageGroup").GetComponent<RectTransform>();
             _cardFaceShadow = _cardFace.Find("Shadow").GetComponent<RectTransform>();
             _dragCanvas = _controller._cardFace.GetComponent<Canvas>();
-
+            
             _originSortingOrder = _dragCanvas.sortingOrder;
         }
 
@@ -97,7 +99,7 @@ namespace GamePlay
 
             float lerpX = Mathf.LerpAngle(_cardFace.eulerAngles.x, sine, Time.deltaTime * tiltSpeed);
             float lerpY = Mathf.LerpAngle(_cardFace.eulerAngles.y, cosine, Time.deltaTime * tiltSpeed);
-            float lerpZ = Mathf.LerpAngle(_cardFace.eulerAngles.z, roatetionZ + (-roateZ), Time.deltaTime * tiltSpeed);
+            float lerpZ = Mathf.LerpAngle(_cardFace.eulerAngles.z, offsetRoatetionZ + (-roateZ), Time.deltaTime * tiltSpeed);
 
             _cardFace.eulerAngles = new Vector3(lerpX, lerpY, lerpZ);
         }
@@ -265,5 +267,6 @@ namespace GamePlay
             tweener.Pause();
             tweener.SetAutoKill(false);
         }
+        
     }
 }
