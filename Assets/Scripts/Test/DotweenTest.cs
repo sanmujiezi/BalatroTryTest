@@ -7,7 +7,13 @@ using UnityEngine.UI;
 
 public class DotweenTest : MonoBehaviour
 {
+    [Range(0,360)] public float sineAngle;
+    [Range(0,360)] public float cosineAngle;
+    public AnimationCurve curve;
     public RectTransform target;
+    public float shakeAngle = 10;
+    public int vibrato = 20;
+    public float randomness = 50;
     private Button _button;
     private bool isFirst = true;
 
@@ -29,6 +35,14 @@ public class DotweenTest : MonoBehaviour
         StartAnimation();
     }
 
+    private void Update()
+    {
+        float sine =  Mathf.Sin(sineAngle ) * 10;
+        float cosine = Mathf.Cos(cosineAngle ) * 10;
+            
+        target.eulerAngles = new Vector3(sine, cosine, 0);
+    }
+
     private void OnClick()
     {
         if (isFirst)
@@ -47,7 +61,7 @@ public class DotweenTest : MonoBehaviour
     {
         AddTweenStack(target.DOLocalMove(new Vector3(30, 30, 0),1f));
         AddTweenStack(target.DOScale(new Vector3(1.2f,1.2f,1),1f));
-       
+        AddTweenStack(target.DOShakeRotation(0.2f,new Vector3(0,0,shakeAngle),vibrato,randomness,true,ShakeRandomnessMode.Harmonic));
     }
 
     private void PlayeAnimation()

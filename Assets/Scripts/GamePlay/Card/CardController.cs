@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,9 +14,8 @@ namespace GamePlay
         public event UnityAction OnSelectedChanged;
         public RectTransform _dragCard { get; private set; }
         public RectTransform _cardFace { get; private set; }
-        public CardGroup cardGroup;
+        [HideInInspector]public CardGroup cardGroup;
         
-
         private CardView _cardView;
         private CardEffect _cardEffect;
         private Vector2 _beginDragOffset;
@@ -24,6 +24,8 @@ namespace GamePlay
         private bool _isSelected;
         private bool _isPressDown;
         private bool _isDrag;
+        public bool isDrag => _isDrag;
+        
 
         public bool isSelected
         {
@@ -93,7 +95,11 @@ namespace GamePlay
             _cardEffect.OnEndDragCard(eventData);
 
             cardGroup.SetDragCard(null);
-            _dragCard.localPosition = Vector2.zero;
+
+            float bufferDis = (_dragCard.localPosition - Vector3.zero).magnitude;
+            float time = bufferDis < 10 ? 0 : 0.2f;
+
+            _dragCard.DOLocalMove(Vector3.zero, time).SetEase(Ease.OutBack);
         }
 
         public void OnPointerDownCard(PointerEventData eventData)

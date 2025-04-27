@@ -468,7 +468,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c369d4cde18624fa551b667d75d46f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sineAngle: 0
+  cosineAngle: 0
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.8773847
+      outSlope: 1.8773847
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.17073083
+      value: 0.32052743
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.43739253
+      value: -0.13521357
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7238373
+      value: 0.30220693
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.0943077
+      outSlope: -1.0943077
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   target: {fileID: 1509659846}
+  shakeAngle: 10
+  vibrato: 15
+  randomness: 20
 --- !u!1 &1281795181
 GameObject:
   m_ObjectHideFlags: 0

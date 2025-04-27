@@ -14,10 +14,6 @@ namespace GamePlay
             get { return _hoverCard;}
             set
             {
-                if (_hoverCard)
-                {
-                    _hoverCard._pointerOutTweener.Restart();
-                }
                 _hoverCard = value;
             }
         }
