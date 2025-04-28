@@ -18,8 +18,15 @@ namespace GamePlay
         private List<GameObject> _cardsolts;
         private CardController _dragCard;
         private float _matchCardArea = 50;
-
         int cardLength = 7;
+
+        [Header("卡牌组偏移与旋转")] public AnimationCurve offsetCurve;
+        public AnimationCurve rotateCurve;
+        public float offsetSize;
+        public float offsetRotation;
+        private int _childCount;
+        private float _clipTime;
+        private float _realTime;
 
         private void Awake()
         {
@@ -27,21 +34,52 @@ namespace GamePlay
             _soltsPrefab = Resources.Load<GameObject>("Prefabs/CardSolts");
             _content = transform.Find("Content").GetComponent<RectTransform>();
             _visualGroup = transform.Find("VisualGroup").GetComponent<RectTransform>();
-            
+
             InitCard();
+            CheckCurvas();
+        }
+
+        public void CheckCurvas()
+        {
+            _clipTime = 1.00f / (_childCount - 1);
+            for (int i = 0; i < _childCount; i++)
+            {
+                float height, rotateZ;
+                if (i == 0)
+                {
+                    _realTime = 0;
+                    height = offsetCurve.Evaluate(_realTime);
+                    rotateZ = rotateCurve.Evaluate(_realTime);
+                }
+                else
+                {
+                    height = offsetCurve.Evaluate(_realTime += _clipTime);
+                    rotateZ = rotateCurve.Evaluate(_realTime);
+                }
+
+                Debug.Log($"realTime:{_realTime} clipTime:{_clipTime} 第 {i} 个实际偏移的高 " + height);
+                RectTransform target = _content.GetChild(i).GetChild(0) as RectTransform;
+                CardEffect targetEffect = target.GetComponent<CardEffect>();
+                float offsetY = height * 100 * offsetSize;
+                float offsetRotateZ = rotateZ * offsetRotation;
+                targetEffect.SetOffSetY(offsetY);
+                targetEffect.SetRotateZ(offsetRotateZ);
+            }
         }
 
         private void InitCard()
         {
             InitDragArea();
-            
+
             if (_content.childCount > 0)
             {
                 for (int i = _content.childCount - 1; i > -1; i--)
                 {
-                    Destroy(_content.GetChild(i).gameObject);
+                    DestroyImmediate(_content.GetChild(i).gameObject);
                 }
             }
+            
+            _childCount = _content.childCount;
 
             if (_cards != null && _cards.Count > 0)
             {
@@ -52,18 +90,19 @@ namespace GamePlay
                 _cards = new List<CardController>(cardLength);
             }
 
+
             for (int i = 0; i < cardLength; i++)
             {
                 GameObject solts = Instantiate(_soltsPrefab, _content);
                 GameObject card = Instantiate(_cardPrefab, solts.transform);
                 CardController cardController = card.GetComponent<CardController>();
-                
+
                 cardController.SetCardFaceParent(_visualGroup);
                 cardController.cardGroup = this;
                 cardController.SetSortOrder(i + 1);
 
                 card.gameObject.name = i.ToString();
-                
+
                 _cards.Add(cardController);
             }
 
@@ -74,7 +113,9 @@ namespace GamePlay
         {
             float contentSpacing = Mathf.Abs(_content.GetComponent<HorizontalLayoutGroup>().spacing);
             _matchCardArea = _matchCardArea - (contentSpacing / 2);
-        }        
+        }
+
+
         public void SetDragCard(CardController controller)
         {
             _dragCard = controller;
@@ -117,12 +158,13 @@ namespace GamePlay
                     Transform solts = _content.GetChild(i);
                     if (i == targetIndex)
                     {
-                        temp.GetComponent<CardController>().SetSortOrder(i + 1,true);
+                        temp.GetComponent<CardController>().SetSortOrder(i + 1, true);
                     }
                     else
                     {
                         temp.GetComponent<CardController>().SetSortOrder(i + 1);
                     }
+
                     temp.SetParent(solts);
                     temp.localPosition = Vector2.zero;
                     _dragCard._dragCard.position = DragPos;
@@ -139,7 +181,7 @@ namespace GamePlay
                     Transform solts = _content.GetChild(i);
                     if (i == targetIndex)
                     {
-                        temp.GetComponent<CardController>().SetSortOrder(i + 1,true);
+                        temp.GetComponent<CardController>().SetSortOrder(i + 1, true);
                     }
                     else
                     {

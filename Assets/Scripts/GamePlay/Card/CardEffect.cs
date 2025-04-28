@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -11,7 +10,6 @@ namespace GamePlay
 {
     public class CardEffect : MonoBehaviour, ICardController
     {
-
         [Header("动画曲线")] public AnimationCurve pointerIn;
         public AnimationCurve pointerOut;
         public List<Tweener> _pointerInTweener;
@@ -28,20 +26,20 @@ namespace GamePlay
 
         [HideInInspector] public int _originSortingOrder;
         private Vector3 _originPos;
+        private Vector3 _afterPos;
 
         private float cardFllowSpeed = 25;
         private float shakeAngle = 4;
         private int vibrato = 30;
         private float randomness = 25;
         private float duration = 0.1f;
-        private  float tiltSpeed = 15;
+        private float tiltSpeed = 15;
         public float offsetRoatetionZ;
         public float offsetPostionY;
         private Vector3 _deltaPos;
         private bool isHover;
         private bool isDrag;
         private int savedIndex;
-
 
 
         private void Awake()
@@ -53,8 +51,9 @@ namespace GamePlay
             _cardFaceImage = _cardFace.Find("ImageGroup").GetComponent<RectTransform>();
             _cardFaceShadow = _cardFace.Find("Shadow").GetComponent<RectTransform>();
             _dragCanvas = _controller._cardFace.GetComponent<Canvas>();
-            
+
             _originSortingOrder = _dragCanvas.sortingOrder;
+            _originPos = _dragGroup.localPosition;
         }
 
         private void Start()
@@ -94,12 +93,15 @@ namespace GamePlay
                 Debug.DrawLine(_dragCard.position, Input.mousePosition, Color.red);
             }
 
-            float sine = isHover ? deltaDir.y * 10f : Mathf.Sin(Time.time + savedIndex) * 10;
-            float cosine = isHover ? deltaDir.x * -1 * 10f : Mathf.Cos(Time.time + savedIndex) * 10;
+            float sine = isHover && !_controller.isDrag ? deltaDir.y * 10f : Mathf.Sin(Time.time + savedIndex) * 10;
+            float cosine = isHover && !_controller.isDrag
+                ? deltaDir.x * -1 * 10f
+                : Mathf.Cos(Time.time + savedIndex) * 10;
 
             float lerpX = Mathf.LerpAngle(_cardFace.eulerAngles.x, sine, Time.deltaTime * tiltSpeed);
             float lerpY = Mathf.LerpAngle(_cardFace.eulerAngles.y, cosine, Time.deltaTime * tiltSpeed);
-            float lerpZ = Mathf.LerpAngle(_cardFace.eulerAngles.z, offsetRoatetionZ + (-roateZ), Time.deltaTime * tiltSpeed);
+            float lerpZ = Mathf.LerpAngle(_cardFace.eulerAngles.z, offsetRoatetionZ + (-roateZ),
+                Time.deltaTime * tiltSpeed);
 
             _cardFace.eulerAngles = new Vector3(lerpX, lerpY, lerpZ);
         }
@@ -267,6 +269,16 @@ namespace GamePlay
             tweener.Pause();
             tweener.SetAutoKill(false);
         }
-        
+
+        public void SetOffSetY(float offSetY)
+        {
+            this.offsetPostionY = offSetY;
+            _dragGroup.localPosition = _originPos + new Vector3(0, offSetY, 0);
+        }
+
+        public void SetRotateZ(float rotateZ)
+        {
+            this.offsetRoatetionZ = rotateZ;
+        }
     }
 }

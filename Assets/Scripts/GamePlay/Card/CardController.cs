@@ -1,11 +1,8 @@
 using System;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
-
 
 namespace GamePlay
 {
@@ -14,8 +11,8 @@ namespace GamePlay
         public event UnityAction OnSelectedChanged;
         public RectTransform _dragCard { get; private set; }
         public RectTransform _cardFace { get; private set; }
-        [HideInInspector]public CardGroup cardGroup;
-        
+        [HideInInspector] public CardGroup cardGroup;
+
         private CardView _cardView;
         private CardEffect _cardEffect;
         private Vector2 _beginDragOffset;
@@ -25,7 +22,7 @@ namespace GamePlay
         private bool _isPressDown;
         private bool _isDrag;
         public bool isDrag => _isDrag;
-        
+
 
         public bool isSelected
         {
@@ -95,6 +92,7 @@ namespace GamePlay
             _cardEffect.OnEndDragCard(eventData);
 
             cardGroup.SetDragCard(null);
+            cardGroup.CheckCurvas();
 
             float bufferDis = (_dragCard.localPosition - Vector3.zero).magnitude;
             float time = bufferDis < 10 ? 0 : 0.2f;
@@ -127,7 +125,7 @@ namespace GamePlay
             else
             {
                 if (_cardFaceCanvas == null)
-                    _cardFaceCanvas = _cardFace.AddComponent<Canvas>();
+                    _cardFaceCanvas = _cardFace.gameObject.AddComponent<Canvas>();
                 _cardFaceCanvas.sortingOrder = sortOrder;
             }
         }
