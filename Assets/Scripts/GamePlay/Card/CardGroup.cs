@@ -112,7 +112,7 @@ namespace GamePlay
         private void InitDragArea()
         {
             float contentSpacing = Mathf.Abs(_content.GetComponent<HorizontalLayoutGroup>().spacing);
-            _matchCardArea = _matchCardArea - (contentSpacing / 2);
+            _matchCardArea = (_matchCardArea - (contentSpacing / 2)) * 0.02f;
         }
 
 

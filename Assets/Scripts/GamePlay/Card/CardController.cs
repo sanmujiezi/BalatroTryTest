@@ -74,8 +74,9 @@ namespace GamePlay
             _cardEffect.OnBeginDragCard(eventData);
 
             cardGroup.SetDragCard(this);
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _beginDragOffset = new Vector3(_dragCard.position.x, _dragCard.position.y, 0) -
-                               new Vector3(eventData.position.x, eventData.position.y, 0);
+                               new Vector3(mousePos.x, mousePos.y, 0);
         }
 
         public void OnDragCard(PointerEventData eventData)
@@ -83,7 +84,8 @@ namespace GamePlay
             _cardEffect.OnDragCard(eventData);
 
             cardGroup.CardCheckOnDrag();
-            _dragCard.position = eventData.position + _beginDragOffset;
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _dragCard.position = (Vector2)mousePos + _beginDragOffset;
         }
 
         public void OnEndDragCard(PointerEventData eventData)

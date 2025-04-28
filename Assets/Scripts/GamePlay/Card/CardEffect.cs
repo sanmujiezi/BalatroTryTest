@@ -30,7 +30,7 @@ namespace GamePlay
 
         private float cardFllowSpeed = 25;
         private float shakeAngle = 4;
-        private int vibrato = 30;
+        private int vibrato = 20;
         private float randomness = 25;
         private float duration = 0.1f;
         private float tiltSpeed = 15;
@@ -84,18 +84,18 @@ namespace GamePlay
         private void RotatinoHandle()
         {
             _deltaPos = _dragCard.position - _cardFace.position;
-            float roateZ = _deltaPos.x * 0.5f;
-
+            float roateZ = _deltaPos.x * 30f;
+            
             savedIndex = isHover ? 0 : _controller.transform.parent.GetSiblingIndex();
-            Vector3 deltaDir = (Input.mousePosition - _dragCard.position).normalized;
+            Vector3 deltaDir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - _dragCard.position).normalized;
             if (isHover)
             {
-                Debug.DrawLine(_dragCard.position, Input.mousePosition, Color.red);
+                Debug.DrawLine((Vector2)_dragCard.position,(Vector2) Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.red);
             }
 
-            float sine = isHover && !_controller.isDrag ? deltaDir.y * 10f : Mathf.Sin(Time.time + savedIndex) * 10;
+            float sine = isHover && !_controller.isDrag ? deltaDir.y * 500f : Mathf.Sin(Time.time + savedIndex) * 10;
             float cosine = isHover && !_controller.isDrag
-                ? deltaDir.x * -1 * 10f
+                ? deltaDir.x * -1 * 500f
                 : Mathf.Cos(Time.time + savedIndex) * 10;
 
             float lerpX = Mathf.LerpAngle(_cardFace.eulerAngles.x, sine, Time.deltaTime * tiltSpeed);
@@ -135,7 +135,7 @@ namespace GamePlay
         public void OnPointerEnterCard(PointerEventData eventData)
         {
             isHover = true;
-            _dragCard.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            _dragCard.localScale = new Vector3(1.2f, 1.2f, 1.2f);
             if (!_controller.isDrag)
                 PlayPointerInAnimation();
         }
@@ -182,7 +182,7 @@ namespace GamePlay
         {
             AddPointerInList(_cardFace.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.2f).SetEase(pointerIn));
             AddPointerInList(_cardFace
-                .DOLocalRotate(new Vector3(_cardFace.eulerAngles.x, _cardFace.eulerAngles.y, _cardFace.eulerAngles.z),
+                .DOLocalRotate(new Vector3(_cardFace.eulerAngles.x, _cardFace.eulerAngles.y, 4f),
                     0.2f)
                 .SetEase(pointerIn));
             AddPointerInList(_cardFace.DOShakeRotation(duration,

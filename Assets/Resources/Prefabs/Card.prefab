@@ -116,7 +116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f5b0f4e5654b0f9d3cd47871d0dc1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardFllowSpeed: 25
   pointerIn:
     serializedVersion: 2
     m_Curve:
@@ -237,13 +236,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  shakeAngle: 4
-  vibrato: 30
-  randomness: 25
-  duration: 0.1
   _originSortingOrder: 0
-  tiltSpeed: 15
-  roatetionZ: 0
+  offsetRoatetionZ: 0
+  offsetPostionY: 0
 --- !u!114 &1130801936748881008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,6 +515,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5469697460908332483, guid: c24f92f3aa28f9f4190956f2f71d15ad, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3723987693326940251, guid: 9e3b78fbad85df04eab65f5c6163f6b5, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
